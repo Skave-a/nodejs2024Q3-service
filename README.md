@@ -8,7 +8,19 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/Skave-a/nodejs2024Q3-service.git
+```
+## Once the repository is cloned, navigate into the project directory:
+
+```
+cd nodejs2024Q3-service
+```
+
+## Switching to develop Branch
+### Make sure to switch to the develop branch:
+
+```
+git checkout develop
 ```
 
 ## Installing NPM modules
