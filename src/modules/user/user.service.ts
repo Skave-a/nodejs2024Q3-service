@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CreateUserDto } from 'src/common/dto/create-user.dto';
-import { UpdateUserDto } from 'src/common/dto/update-user.dto';
+import { CreateUserDto } from 'src/modules/user/dto/create-user.dto';
+import { UpdateUserDto } from 'src/modules/user/dto/update-user.dto';
 import { User } from 'src/common/types';
 
 const id = uuidv4();

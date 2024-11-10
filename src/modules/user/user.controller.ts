@@ -8,8 +8,8 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { UpdateUserDto } from 'src/common/dto/update-user.dto';
-import { CreateUserDto } from '../../common/dto/create-user.dto';
+import { UpdateUserDto } from 'src/modules/user/dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 

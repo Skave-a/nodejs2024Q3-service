@@ -6,6 +6,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const port = process.env.PORT || 4000;
+
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')
     .setDescription('Manage users, artists, tracks, albums, and favorites')
@@ -15,6 +17,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(4000);
+  await app.listen(port);
 }
 bootstrap();
