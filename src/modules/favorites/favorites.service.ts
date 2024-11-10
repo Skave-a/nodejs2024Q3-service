@@ -2,6 +2,7 @@ import {
   Injectable,
   UnprocessableEntityException,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { Favorites } from './favorites.entity';
 import { FavoritesResponse } from './favorites.response';
@@ -12,7 +13,11 @@ import { validate as uuidValidate } from 'uuid';
 
 @Injectable()
 export class FavoritesService {
-  private favorites: Favorites = new Favorites();
+  private favorites: Favorites = {
+    artists: [],
+    albums: [],
+    tracks: [],
+  };
 
   constructor(
     private readonly artistService: ArtistService,
@@ -21,21 +26,19 @@ export class FavoritesService {
   ) {}
 
   getFavorites(): FavoritesResponse {
-    const artists = this.favorites.artists.map((id) =>
-      this.artistService.findOne(id),
-    );
-    const albums = this.favorites.albums.map((id) =>
-      this.albumService.findOne(id),
-    );
-    const tracks = this.favorites.tracks.map((id) =>
-      this.trackService.findOne(id),
-    );
-
-    return {
-      artists,
-      albums,
-      tracks,
+    const response: FavoritesResponse = {
+      artists: this.favorites.artists
+        .map((id) => this.artistService.findOne(id))
+        .filter((artist) => artist !== null),
+      albums: this.favorites.albums
+        .map((id) => this.albumService.findOne(id))
+        .filter((album) => album !== null),
+      tracks: this.favorites.tracks
+        .map((id) => this.trackService.findOne(id))
+        .filter((track) => track !== null),
     };
+
+    return response;
   }
 
   addTrackToFavorites(id: string): void {
@@ -89,7 +92,7 @@ export class FavoritesService {
     }
 
     if (!this.favorites.tracks.includes(id)) {
-      throw new UnprocessableEntityException('Track not found in favorites');
+      throw new NotFoundException('Track not found in favorites');
     }
 
     this.favorites.tracks = this.favorites.tracks.filter(
@@ -103,7 +106,7 @@ export class FavoritesService {
     }
 
     if (!this.favorites.albums.includes(id)) {
-      throw new UnprocessableEntityException('Album not found in favorites');
+      throw new NotFoundException('Album not found in favorites');
     }
 
     this.favorites.albums = this.favorites.albums.filter(
@@ -117,11 +120,34 @@ export class FavoritesService {
     }
 
     if (!this.favorites.artists.includes(id)) {
-      throw new UnprocessableEntityException('Artist not found in favorites');
+      throw new NotFoundException('Artist not found in favorites');
     }
 
     this.favorites.artists = this.favorites.artists.filter(
       (artistId) => artistId !== id,
     );
+  }
+
+  removeDeletedEntity(
+    entityType: 'artist' | 'album' | 'track',
+    id: string,
+  ): void {
+    switch (entityType) {
+      case 'artist':
+        this.favorites.artists = this.favorites.artists.filter(
+          (artistId) => artistId !== id,
+        );
+        break;
+      case 'album':
+        this.favorites.albums = this.favorites.albums.filter(
+          (albumId) => albumId !== id,
+        );
+        break;
+      case 'track':
+        this.favorites.tracks = this.favorites.tracks.filter(
+          (trackId) => trackId !== id,
+        );
+        break;
+    }
   }
 }

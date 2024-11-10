@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -61,6 +62,7 @@ export class UserController {
     description: 'User successfully created',
     type: User,
   })
+  @HttpCode(HttpStatus.CREATED)
   async createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -85,6 +87,7 @@ export class UserController {
     status: 404,
     description: 'User not found',
   })
+  @HttpCode(HttpStatus.CREATED)
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -107,7 +110,7 @@ export class UserController {
     status: 404,
     description: 'User not found',
   })
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') id: string) {
     const user = this.userService.findOne(id);
     if (!user) {

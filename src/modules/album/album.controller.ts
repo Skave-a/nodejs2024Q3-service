@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -71,6 +73,7 @@ export class AlbumController {
     status: 400,
     description: 'Invalid data',
   })
+  @HttpCode(HttpStatus.CREATED)
   async createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
     return this.albumService.create(createAlbumDto);
   }
@@ -128,6 +131,7 @@ export class AlbumController {
     status: 404,
     description: 'Album not found',
   })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteAlbum(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid album ID format');

@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -71,6 +73,7 @@ export class ArtistController {
     status: 400,
     description: 'Invalid data',
   })
+  @HttpCode(HttpStatus.CREATED)
   async createArtist(@Body() createArtistDto: CreateArtistDto) {
     if (!createArtistDto.name || !createArtistDto.grammy) {
       throw new BadRequestException('Missing required fields: name or grammy');
@@ -131,6 +134,7 @@ export class ArtistController {
     status: 404,
     description: 'Artist not found',
   })
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteArtist(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid artist ID format');

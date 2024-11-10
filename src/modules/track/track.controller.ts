@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
@@ -74,6 +75,7 @@ export class TrackController {
     status: 400,
     description: 'Invalid data',
   })
+  @HttpCode(HttpStatus.CREATED)
   async createTrack(@Body() createTrackDto: CreateTrackDto) {
     return this.trackService.create(createTrackDto);
   }
@@ -131,7 +133,7 @@ export class TrackController {
     status: 404,
     description: 'Track not found',
   })
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   async deleteTrack(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
