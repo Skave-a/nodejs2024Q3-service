@@ -37,7 +37,7 @@ export class ArtistController {
     description: 'Artist ID',
   })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'Successfully retrieved artist',
     type: Artist,
   })

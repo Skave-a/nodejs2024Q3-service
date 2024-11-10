@@ -7,14 +7,14 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistService {
-  private readonly artists: Artist[] = [];
+  private static readonly artists: Artist[] = [];
 
   findAll(): Artist[] {
-    return this.artists;
+    return ArtistService.artists;
   }
 
   findOne(id: string): Artist {
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = ArtistService.artists.find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException('Artist not found');
     }
@@ -27,7 +27,7 @@ export class ArtistService {
       ...createArtistDto,
     };
 
-    this.artists.push(artist);
+    ArtistService.artists.push(artist);
     return artist;
   }
 
@@ -38,10 +38,10 @@ export class ArtistService {
   }
 
   remove(id: string): void {
-    const index = this.artists.findIndex((artist) => artist.id === id);
+    const index = ArtistService.artists.findIndex((artist) => artist.id === id);
     if (index === -1) {
       throw new NotFoundException('Artist not found');
     }
-    this.artists.splice(index, 1);
+    ArtistService.artists.splice(index, 1);
   }
 }

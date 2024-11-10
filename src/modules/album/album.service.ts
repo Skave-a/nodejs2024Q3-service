@@ -1,19 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { AlbumEntity } from './album.entity';
+import { Album } from './album.entity';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumService {
-  private readonly albums: AlbumEntity[] = [];
+  private readonly albums: Album[] = [];
 
-  findAll(): AlbumEntity[] {
+  findAll(): Album[] {
     return this.albums;
   }
 
-  findOne(id: string): AlbumEntity {
+  findOne(id: string): Album {
     const album = this.albums.find((album) => album.id === id);
     if (!album) {
       throw new NotFoundException('Album not found');
@@ -21,8 +21,8 @@ export class AlbumService {
     return album;
   }
 
-  create(createAlbumDto: CreateAlbumDto): AlbumEntity {
-    const album: AlbumEntity = {
+  create(createAlbumDto: CreateAlbumDto): Album {
+    const album: Album = {
       id: uuidv4(),
       ...createAlbumDto,
     };
@@ -30,7 +30,7 @@ export class AlbumService {
     return album;
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto): AlbumEntity {
+  update(id: string, updateAlbumDto: UpdateAlbumDto): Album {
     const album = this.findOne(id);
     Object.assign(album, updateAlbumDto);
     return album;

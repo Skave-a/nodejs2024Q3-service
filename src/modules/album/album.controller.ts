@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
-import { AlbumEntity } from './album.entity';
+import { Album } from './album.entity';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -23,7 +23,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved all albums',
-    type: [AlbumEntity],
+    type: [Album],
   })
   async getAllAlbums() {
     return this.albumService.findAll();
@@ -39,7 +39,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved album',
-    type: AlbumEntity,
+    type: Album,
   })
   @ApiResponse({
     status: 400,
@@ -65,7 +65,7 @@ export class AlbumController {
   @ApiResponse({
     status: 201,
     description: 'Album successfully created',
-    type: AlbumEntity,
+    type: Album,
   })
   @ApiResponse({
     status: 400,
@@ -89,7 +89,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Album successfully updated',
-    type: AlbumEntity,
+    type: Album,
   })
   @ApiResponse({
     status: 400,
