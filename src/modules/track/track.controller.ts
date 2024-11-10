@@ -35,11 +35,7 @@ export class TrackController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get track by ID' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'Track ID',
-  })
+  @ApiParam({ name: 'id', type: String, description: 'Track ID' })
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved track',
@@ -57,7 +53,7 @@ export class TrackController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
-    const track = this.trackService.findOne(id);
+    const track = await this.trackService.findOne(id);
     if (!track) {
       throw new NotFoundException('Track not found');
     }
@@ -86,11 +82,7 @@ export class TrackController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update track' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'Track ID to update',
-  })
+  @ApiParam({ name: 'id', type: String, description: 'Track ID to update' })
   @ApiBody({
     type: UpdateTrackDto,
     description: 'Data for updating track',
@@ -115,7 +107,7 @@ export class TrackController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
-    const track = this.trackService.findOne(id);
+    const track = await this.trackService.findOne(id);
     if (!track) {
       throw new NotFoundException('Track not found');
     }
@@ -124,15 +116,8 @@ export class TrackController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete track' })
-  @ApiParam({
-    name: 'id',
-    type: String,
-    description: 'Track ID to delete',
-  })
-  @ApiResponse({
-    status: 204,
-    description: 'Track successfully deleted',
-  })
+  @ApiParam({ name: 'id', type: String, description: 'Track ID to delete' })
+  @ApiResponse({ status: 204, description: 'Track successfully deleted' })
   @ApiResponse({
     status: 400,
     description: 'Invalid track ID format',
@@ -146,11 +131,11 @@ export class TrackController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
-    const track = this.trackService.findOne(id);
+    const track = await this.trackService.findOne(id);
     if (!track) {
       throw new NotFoundException('Track not found');
     }
-    this.trackService.remove(id);
+    await this.trackService.remove(id);
   }
 
   private isValidUUID(id: string): boolean {

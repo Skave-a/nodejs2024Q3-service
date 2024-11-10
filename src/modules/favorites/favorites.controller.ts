@@ -8,6 +8,7 @@ import {
   HttpStatus,
   BadRequestException,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './favorites.response';
@@ -32,7 +33,7 @@ export class FavoritesController {
     try {
       return this.favoritesService.addTrackToFavorites(id);
     } catch (error) {
-      throw new BadRequestException('Invalid track ID format or invalid data');
+      throw new UnprocessableEntityException('Invalid track ID format or invalid data');
     }
   }
 
@@ -42,7 +43,7 @@ export class FavoritesController {
     try {
       return this.favoritesService.addAlbumToFavorites(id);
     } catch (error) {
-      throw new BadRequestException('Invalid album ID format or invalid data');
+      throw new UnprocessableEntityException('Invalid album ID format or invalid data');
     }
   }
 
@@ -52,7 +53,7 @@ export class FavoritesController {
     try {
       return this.favoritesService.addArtistToFavorites(id);
     } catch (error) {
-      throw new BadRequestException('Invalid artist ID format or invalid data');
+      throw new UnprocessableEntityException('Invalid artist ID format or invalid data');
     }
   }
 

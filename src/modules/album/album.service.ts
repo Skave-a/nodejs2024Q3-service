@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Album } from './album.entity';
@@ -14,6 +18,9 @@ export class AlbumService {
   }
 
   findOne(id: string): Album {
+    if (!this.isValidUUID(id)) {
+      throw new BadRequestException('Invalid album ID format');
+    }
     const album = this.albums.find((album) => album.id === id);
     if (!album) {
       throw new NotFoundException('Album not found');
@@ -42,5 +49,11 @@ export class AlbumService {
       throw new NotFoundException('Album not found');
     }
     this.albums.splice(index, 1);
+  }
+
+  private isValidUUID(id: string): boolean {
+    const regex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return regex.test(id);
   }
 }

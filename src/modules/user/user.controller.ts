@@ -5,7 +5,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   Post,
   Put,
@@ -44,15 +43,15 @@ export class UserController {
     type: User,
   })
   @ApiResponse({
+    status: 400,
+    description: 'Invalid user ID format',
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found',
   })
   async getUserById(@Param('id') id: string) {
-    const user = this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
+    return this.userService.findOne(id);
   }
 
   @Post()
@@ -88,18 +87,18 @@ export class UserController {
     type: User,
   })
   @ApiResponse({
+    status: 400,
+    description: 'Invalid user ID format or data',
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found',
   })
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   async updateUser(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const user = this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
     return this.userService.update(id, updateUserDto);
   }
 
@@ -115,15 +114,15 @@ export class UserController {
     description: 'User successfully deleted',
   })
   @ApiResponse({
+    status: 400,
+    description: 'Invalid user ID format',
+  })
+  @ApiResponse({
     status: 404,
     description: 'User not found',
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteUser(@Param('id') id: string) {
-    const user = this.userService.findOne(id);
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
     this.userService.remove(id);
   }
 }
