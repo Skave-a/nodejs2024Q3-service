@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -129,10 +131,16 @@ export class TrackController {
     status: 404,
     description: 'Track not found',
   })
+  @HttpCode(204)
   async deleteTrack(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
+    const track = this.trackService.findOne(id);
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+
     this.trackService.remove(id);
   }
 

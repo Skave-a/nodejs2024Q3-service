@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -98,14 +100,19 @@ export class UserController {
     description: 'User ID to delete',
   })
   @ApiResponse({
-    status: 200,
+    status: 204,
     description: 'User successfully deleted',
   })
   @ApiResponse({
     status: 404,
     description: 'User not found',
   })
+  @HttpCode(204)
   async deleteUser(@Param('id') id: string) {
-    return this.userService.remove(id);
+    const user = this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    this.userService.remove(id);
   }
 }
