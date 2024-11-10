@@ -6,6 +6,8 @@ import {
   Param,
   HttpCode,
   HttpStatus,
+  BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { FavoritesResponse } from './favorites.response';
@@ -16,43 +18,71 @@ export class FavoritesController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  getFavorites(): FavoritesResponse {
-    return this.favoritesService.getFavorites();
+  async getFavorites(): Promise<FavoritesResponse> {
+    try {
+      return this.favoritesService.getFavorites();
+    } catch (error) {
+      throw new NotFoundException('Favorites not found');
+    }
   }
 
   @Post('track/:id')
   @HttpCode(HttpStatus.CREATED)
-  addTrackToFavorites(@Param('id') id: string): void {
-    return this.favoritesService.addTrackToFavorites(id);
+  async addTrackToFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.addTrackToFavorites(id);
+    } catch (error) {
+      throw new BadRequestException('Invalid track ID format or invalid data');
+    }
   }
 
   @Post('album/:id')
   @HttpCode(HttpStatus.CREATED)
-  addAlbumToFavorites(@Param('id') id: string): void {
-    return this.favoritesService.addAlbumToFavorites(id);
+  async addAlbumToFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.addAlbumToFavorites(id);
+    } catch (error) {
+      throw new BadRequestException('Invalid album ID format or invalid data');
+    }
   }
 
   @Post('artist/:id')
   @HttpCode(HttpStatus.CREATED)
-  addArtistToFavorites(@Param('id') id: string): void {
-    return this.favoritesService.addArtistToFavorites(id);
+  async addArtistToFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.addArtistToFavorites(id);
+    } catch (error) {
+      throw new BadRequestException('Invalid artist ID format or invalid data');
+    }
   }
 
   @Delete('track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeTrackFromFavorites(@Param('id') id: string): void {
-    return this.favoritesService.removeTrackFromFavorites(id);
+  async removeTrackFromFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.removeTrackFromFavorites(id);
+    } catch (error) {
+      throw new NotFoundException('Track not found in favorites');
+    }
   }
 
   @Delete('album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeAlbumFromFavorites(@Param('id') id: string): void {
-    return this.favoritesService.removeAlbumFromFavorites(id);
+  async removeAlbumFromFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.removeAlbumFromFavorites(id);
+    } catch (error) {
+      throw new NotFoundException('Album not found in favorites');
+    }
   }
 
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeArtistFromFavorites(@Param('id') id: string): void {
-    return this.favoritesService.removeArtistFromFavorites(id);
+  async removeArtistFromFavorites(@Param('id') id: string): Promise<void> {
+    try {
+      return this.favoritesService.removeArtistFromFavorites(id);
+    } catch (error) {
+      throw new NotFoundException('Artist not found in favorites');
+    }
   }
 }

@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -55,7 +56,11 @@ export class AlbumController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid album ID format');
     }
-    return this.albumService.findOne(id);
+    const album = this.albumService.findOne(id);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+    return album;
   }
 
   @Post()
@@ -109,6 +114,10 @@ export class AlbumController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid album ID format');
     }
+    const album = this.albumService.findOne(id);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
     return this.albumService.update(id, updateAlbumDto);
   }
 
@@ -135,6 +144,10 @@ export class AlbumController {
   async deleteAlbum(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid album ID format');
+    }
+    const album = this.albumService.findOne(id);
+    if (!album) {
+      throw new NotFoundException('Album not found');
     }
     this.albumService.remove(id);
   }

@@ -57,7 +57,11 @@ export class TrackController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
-    return this.trackService.findOne(id);
+    const track = this.trackService.findOne(id);
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
+    return track;
   }
 
   @Post()
@@ -111,6 +115,10 @@ export class TrackController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid track ID format');
     }
+    const track = this.trackService.findOne(id);
+    if (!track) {
+      throw new NotFoundException('Track not found');
+    }
     return this.trackService.update(id, updateTrackDto);
   }
 
@@ -142,7 +150,6 @@ export class TrackController {
     if (!track) {
       throw new NotFoundException('Track not found');
     }
-
     this.trackService.remove(id);
   }
 

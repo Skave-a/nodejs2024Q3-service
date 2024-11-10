@@ -48,7 +48,11 @@ export class UserController {
     description: 'User not found',
   })
   async getUserById(@Param('id') id: string) {
-    return this.userService.findOne(id);
+    const user = this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   @Post()
@@ -92,6 +96,10 @@ export class UserController {
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
+    const user = this.userService.findOne(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
     return this.userService.update(id, updateUserDto);
   }
 

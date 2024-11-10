@@ -6,6 +6,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -39,7 +40,7 @@ export class ArtistController {
     description: 'Artist ID',
   })
   @ApiResponse({
-    status: 204,
+    status: 200,
     description: 'Successfully retrieved artist',
     type: Artist,
   })
@@ -55,7 +56,11 @@ export class ArtistController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid artist ID format');
     }
-    return this.artistService.findOne(id);
+    const artist = this.artistService.findOne(id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return artist;
   }
 
   @Post()
@@ -112,6 +117,10 @@ export class ArtistController {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid artist ID format');
     }
+    const artist = this.artistService.findOne(id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
+    }
     return this.artistService.update(id, updateArtistDto);
   }
 
@@ -138,6 +147,10 @@ export class ArtistController {
   async deleteArtist(@Param('id') id: string) {
     if (!this.isValidUUID(id)) {
       throw new BadRequestException('Invalid artist ID format');
+    }
+    const artist = this.artistService.findOne(id);
+    if (!artist) {
+      throw new NotFoundException('Artist not found');
     }
     this.artistService.remove(id);
   }
