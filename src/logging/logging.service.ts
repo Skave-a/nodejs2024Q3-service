@@ -5,21 +5,21 @@ import * as path from 'path';
 @Injectable()
 export class LoggingService implements LoggerService {
   private readonly logFilePath: string;
+  private readonly errorLogFilePath: string;
   private readonly logLevel: string;
 
   constructor() {
-    const isProduction = process.env.NODE_ENV === 'production';
-
-    const logDir = isProduction
-      ? path.join(__dirname, 'logs')
-      : path.join(__dirname, '..', 'logs');
+    const logDir =
+      process.env.NODE_ENV === 'production'
+        ? path.join(__dirname, 'logs')
+        : path.join(__dirname, '../../logs');
 
     if (!fs.existsSync(logDir)) {
       fs.mkdirSync(logDir, { recursive: true });
     }
 
     this.logFilePath = path.join(logDir, 'app.log');
-
+    this.errorLogFilePath = path.join(logDir, 'error.log');
     this.logLevel = process.env.LOG_LEVEL || 'info';
   }
 
@@ -30,7 +30,28 @@ export class LoggingService implements LoggerService {
 
       console.log(logMessage);
 
-      fs.appendFileSync(this.logFilePath, logMessage);
+      this.appendToLogFile(
+        logMessage,
+        level === 'error' ? this.errorLogFilePath : this.logFilePath,
+      );
+    }
+  }
+
+  private appendToLogFile(message: string, logFilePath: string) {
+    try {
+      if (
+        fs.existsSync(logFilePath) &&
+        fs.statSync(logFilePath).size >
+          parseInt(process.env.MAX_LOG_FILE_SIZE || '10485760', 10)
+      ) {
+        const newFilePath = `${logFilePath}.${new Date()
+          .toISOString()
+          .replace(/[:.]/g, '-')}`;
+        fs.renameSync(logFilePath, newFilePath);
+      }
+      fs.appendFileSync(logFilePath, message);
+    } catch (error) {
+      console.error('Error writing log file:', error);
     }
   }
 
