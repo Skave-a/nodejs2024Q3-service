@@ -31,6 +31,10 @@ export class UserService {
     return user;
   }
 
+  findByLogin(login: string): User | undefined {
+    return this.users.find((user) => user.login === login);
+  }
+
   create(userDto: CreateUserDto): User {
     const user: User = {
       id: uuidv4(),
